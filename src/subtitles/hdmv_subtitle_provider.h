@@ -8,19 +8,19 @@
 class HdmvSubtitleProviderImpl
 {
 public:
-    HdmvSubtitleProviderImpl (CBaseSub* pSub);
+    HdmvSubtitleProviderImpl(CBaseSub* pSub);
     ~HdmvSubtitleProviderImpl(void);
 
-    STDMETHODIMP Connect     (IXyOptions *consumer);
-    STDMETHODIMP RequestFrame(IXySubRenderFrame**subRenderFrame, REFERENCE_TIME now);
-    STDMETHODIMP Invalidate  (REFERENCE_TIME rtInvalidate = -1);
+    STDMETHODIMP Connect(IXyOptions* consumer);
+    STDMETHODIMP RequestFrame(IXySubRenderFrame** subRenderFrame, REFERENCE_TIME now);
+    STDMETHODIMP Invalidate(REFERENCE_TIME rtInvalidate = -1);
 private:
     HRESULT ResetAllocator();
     HRESULT Render(REFERENCE_TIME now, POSITION pos);
 private :
     CBaseSub*                   m_pSub;
 
-    IXyOptions                 *m_consumer;
+    IXyOptions*                 m_consumer;
     CSize                       m_cur_output_size;
     bool m_use_dst_alpha;
     CComPtr<ISubPicExAllocator> m_allocator;
@@ -30,7 +30,7 @@ private :
 
 //This is for embedded subtitles
 class __declspec(uuid("F316F98F-BDB5-42AA-A253-8D6C8AA20754"))
-HdmvSubtitleProvider : public CUnknown, public IXySubRenderProvider, public ISubStream
+    HdmvSubtitleProvider : public CUnknown, public IXySubRenderProvider, public ISubStream
 {
 public:
     HdmvSubtitleProvider(CCritSec* pLock, SUBTITLE_TYPE nType, const CString& name, LCID lcid);
@@ -40,9 +40,9 @@ public:
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void** ppv);
 
     // IXySubRenderProvider
-    STDMETHODIMP Connect     (IXyOptions *consumer);
-    STDMETHODIMP RequestFrame(IXySubRenderFrame**subRenderFrame, REFERENCE_TIME now);
-    STDMETHODIMP Invalidate  (REFERENCE_TIME rtInvalidate = -1);
+    STDMETHODIMP Connect(IXyOptions* consumer);
+    STDMETHODIMP RequestFrame(IXySubRenderFrame** subRenderFrame, REFERENCE_TIME now);
+    STDMETHODIMP Invalidate(REFERENCE_TIME rtInvalidate = -1);
 
     // IPersist
     STDMETHODIMP GetClassID(CLSID* pClassID);
@@ -56,7 +56,7 @@ public:
 
     //fix me: add to an interface
     HRESULT ParseSample(IMediaSample* pSample);
-    HRESULT NewSegment (REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
+    HRESULT NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
     HRESULT EndOfStream(void);
 
     HRESULT SetYuvType(CBaseSub::ColorType colorType, CBaseSub::YuvRangeType yuvRangeType);
@@ -67,12 +67,12 @@ private :
 
     CBaseSub*       m_pSub;
     CCritSec        m_csCritSec;
-    HdmvSubtitleProviderImpl *m_helper;
+    HdmvSubtitleProviderImpl* m_helper;
 };
 
 //This is for external subtitles
 class __declspec(uuid("B5C880E5-A702-4F1B-B79D-410149874726"))
-SupFileSubtitleProvider : public CUnknown, public IXySubRenderProvider, public ISubStream, protected CAMThread
+    SupFileSubtitleProvider : public CUnknown, public IXySubRenderProvider, public ISubStream, protected CAMThread
 {
 public:
     SupFileSubtitleProvider();
@@ -84,9 +84,9 @@ public:
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void** ppv);
 
     // IXySubRenderProvider
-    STDMETHODIMP Connect     (IXyOptions *consumer);
-    STDMETHODIMP RequestFrame(IXySubRenderFrame**subRenderFrame, REFERENCE_TIME now);
-    STDMETHODIMP Invalidate  (REFERENCE_TIME rtInvalidate = -1);
+    STDMETHODIMP Connect(IXyOptions* consumer);
+    STDMETHODIMP RequestFrame(IXySubRenderFrame** subRenderFrame, REFERENCE_TIME now);
+    STDMETHODIMP Invalidate(REFERENCE_TIME rtInvalidate = -1);
 
     // IPersist
     STDMETHODIMP GetClassID(CLSID* pClassID);
@@ -105,6 +105,6 @@ private:
     CString     m_fname, m_subname;
     CHdmvSub*   m_pSub;
     CCritSec    m_csCritSec;
-    HdmvSubtitleProviderImpl *m_helper;
+    HdmvSubtitleProviderImpl* m_helper;
 };
 

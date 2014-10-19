@@ -1,6 +1,6 @@
 /*
-*	Copyright (C) 2003-2006 Gabest
-*	http://www.gabest.org
+*   Copyright (C) 2003-2006 Gabest
+*   http://www.gabest.org
 *
 *  This Program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -41,8 +41,7 @@ typedef RECT   RECTCoor2;
 typedef CRect  CRectCoor2;
 typedef FwRect FwRectCoor2;
 
-struct STSStyleBase
-{
+struct STSStyleBase {
     int     charSet;
     CString fontName;
     double  fontSize;  // height
@@ -57,8 +56,7 @@ struct STSStyleBase
 LOGFONTA& operator <<= (LOGFONTA& lfa, const STSStyleBase& s);
 LOGFONTW& operator <<= (LOGFONTW& lfw, const STSStyleBase& s);
 
-struct STSStyle: public STSStyleBase
-{
+struct STSStyle: public STSStyleBase {
 public:
     FwRect   marginRect;   // measured from the sides
     int      scrAlignment; // 1 - 9: as on the numpad, 0: default
@@ -76,7 +74,7 @@ public:
     double   fontAngleZ, fontAngleX, fontAngleY;
     double   fontShiftX, fontShiftY;
     int      relativeTo;   // 0: window, 1: video, 2: undefined (~window)
-                           // Edit: NOT supported now
+    // Edit: NOT supported now
 
     STSStyle();
 
@@ -95,14 +93,14 @@ typedef ::boost::flyweights::flyweight<STSStyle, ::boost::flyweights::no_locking
 
 //for FwSTSStyle
 static inline std::size_t hash_value(const STSStyleBase& s)
-{    
+{
     std::size_t hash = CStringElementTraits<CString>::Hash(s.fontName);
-    hash = (hash<<5) + (hash) + s.charSet;
-    hash = (hash<<5) + (hash) + hash_value(s.fontSize);
-    hash = (hash<<5) + (hash) + s.fontWeight;
-    hash = (hash<<5) + (hash) + s.fItalic;          //Todo: fix me
-    hash = (hash<<5) + (hash) + s.fUnderline;
-    hash = (hash<<5) + (hash) + s.fStrikeOut;
+    hash = (hash << 5) + (hash) + s.charSet;
+    hash = (hash << 5) + (hash) + hash_value(s.fontSize);
+    hash = (hash << 5) + (hash) + s.fontWeight;
+    hash = (hash << 5) + (hash) + s.fItalic;        //Todo: fix me
+    hash = (hash << 5) + (hash) + s.fUnderline;
+    hash = (hash << 5) + (hash) + s.fStrikeOut;
     return  hash;
 }
 
@@ -110,20 +108,20 @@ static inline std::size_t hash_value(const STSStyle& s)
 {
     //Todo: fix me
     std::size_t hash = hash_value(static_cast<const STSStyleBase&>(s));
-    hash = (hash<<5) + (hash) + s.colors[0];
-    hash = (hash<<5) + (hash) + s.colors[2];
-    hash = (hash<<5) + (hash) + hash_value(s.fontScaleX);
-    hash = (hash<<5) + (hash) + hash_value(s.fontScaleY);
-    hash = (hash<<5) + (hash) + hash_value(s.fontAngleX);
-    hash = (hash<<5) + (hash) + hash_value(s.fontAngleY);
-    hash = (hash<<5) + (hash) + hash_value(s.fontAngleZ);
-    hash = (hash<<5) + (hash) + hash_value(s.fontShiftX);
-    hash = (hash<<5) + (hash) + hash_value(s.fontShiftY);
+    hash = (hash << 5) + (hash) + s.colors[0];
+    hash = (hash << 5) + (hash) + s.colors[2];
+    hash = (hash << 5) + (hash) + hash_value(s.fontScaleX);
+    hash = (hash << 5) + (hash) + hash_value(s.fontScaleY);
+    hash = (hash << 5) + (hash) + hash_value(s.fontAngleX);
+    hash = (hash << 5) + (hash) + hash_value(s.fontAngleY);
+    hash = (hash << 5) + (hash) + hash_value(s.fontAngleZ);
+    hash = (hash << 5) + (hash) + hash_value(s.fontShiftX);
+    hash = (hash << 5) + (hash) + hash_value(s.fontShiftY);
 
     return  hash;
 }
 
-class CSTSStyleMap : public CAtlMap<CString, STSStyle*, CStringElementTraits<CString> >
+class CSTSStyleMap : public CAtlMap<CString, STSStyle*, CStringElementTraits<CString>>
 {
 public:
     CSTSStyleMap() {}
@@ -131,8 +129,7 @@ public:
     void Free();
 };
 
-typedef struct
-{
+typedef struct {
     CStringW str;
     bool     fUnicode;
     CString  style, actor, effect;
@@ -149,7 +146,7 @@ public:
     bool animated; //if this segment has animate effect
     CAtlArray<int> subs;
 
-    STSSegment()                             {animated=false;}
+    STSSegment()                             {animated = false;}
     STSSegment(int s, int e)                 {start = s; end = e; animated = false;}
     STSSegment(const STSSegment& stss)       {*this = stss;}
     void operator = (const STSSegment& stss) {start = stss.start; end = stss.end; animated = stss.animated; subs.Copy(stss.subs);}
@@ -181,8 +178,7 @@ public:
     bool           m_fForcedDefaultStyle;
     STSStyle       m_defaultStyle;
 
-    enum EPARCompensationType
-    {
+    enum EPARCompensationType {
         EPCTDisabled     = 0,
         EPCTDownscale    = 1,
         EPCTUpscale      = 2,
@@ -192,14 +188,12 @@ public:
     EPARCompensationType m_ePARCompensationType;
     double               m_dPARCompensation;
 
-    enum YCbCrMatrix
-    {
+    enum YCbCrMatrix {
         YCbCrMatrix_BT601,
         YCbCrMatrix_BT709,
         YCbCrMatrix_AUTO
     };
-    enum YCbCrRange
-    {
+    enum YCbCrRange {
         YCbCrRange_PC,
         YCbCrRange_TV,
         YCbCrRange_AUTO
@@ -221,20 +215,20 @@ public:
 
     bool Open(CString    fn           , int CharSet, CString name = _T(""));
     bool Open(CTextFile* f            , int CharSet, CString name);
-    bool Open(BYTE     * data, int len, int CharSet, CString name);
+    bool Open(BYTE*      data, int len, int CharSet, CString name);
     bool SaveAs(CString fn, exttype et, double fps = -1, CTextFile::enc = CTextFile::ASCII);
 
-    void Add(CStringW str, bool fUnicode, int start, int end, CString style = CString(_T("Default")), 
-        const CString& actor  = CString(_T("")), 
-        const CString& effect = CString(_T("")), 
-        const CRect& marginRect = CRect(0,0,0,0), int layer = 0, int readorder = -1);
+    void Add(CStringW str, bool fUnicode, int start, int end, CString style = CString(_T("Default")),
+             const CString& actor  = CString(_T("")),
+             const CString& effect = CString(_T("")),
+             const CRect& marginRect = CRect(0, 0, 0, 0), int layer = 0, int readorder = -1);
     //void Add(CStringW str, bool fUnicode, int start, int end, const CString& style, const CString& actor, const CString& effect, const CRect& marginRect, int layer, int readorder);
     //void Add(CStringW str, bool fUnicode, int start, int end);
 
     //add an STSEntry obj to the array
     //NO addition segments added
     //remember to call sort when all STSEntrys are ready
-    void AddSTSEntryOnly(CStringW str, bool fUnicode, int start, int end, CString style = _T("Default"), const CString& actor = _T(""), const CString& effect = _T(""), const CRect& marginRect = CRect(0,0,0,0), int layer = 0, int readorder = -1);
+    void AddSTSEntryOnly(CStringW str, bool fUnicode, int start, int end, CString style = _T("Default"), const CString& actor = _T(""), const CString& effect = _T(""), const CRect& marginRect = CRect(0, 0, 0, 0), int layer = 0, int readorder = -1);
 
     STSStyle* CreateDefaultStyle(int CharSet);
     void ChangeUnknownStylesToDefault();
@@ -245,15 +239,15 @@ public:
 
     void SetForceDefaultStyle(bool value);
 
-    void ConvertToTimeBased (double fps);
+    void ConvertToTimeBased(double fps);
     void ConvertToFrameBased(double fps);
 
     int  TranslateStart(int i, double fps);
-    int  TranslateEnd  (int i, double fps);
-    int  SearchSub     (int t, double fps);
+    int  TranslateEnd(int i, double fps);
+    int  SearchSub(int t, double fps);
 
-    int  TranslateSegmentStart   (int i, double fps);
-    int  TranslateSegmentEnd     (int i, double fps);
+    int  TranslateSegmentStart(int i, double fps);
+    int  TranslateSegmentEnd(int i, double fps);
     void TranslateSegmentStartEnd(int i, double fps, /*out*/int& start, /*out*/int& end);
 
     //find the first STSSegment with stop time > @t
@@ -266,7 +260,7 @@ public:
     //@iSegment: return the index, 0 based, of the STSSegment found. Return -1 if such STSSegment not exist
     //@nSegment: return the STSSegments count
     //@return: the ptr to the STSSegment found, return NULL if such STSSegment not exist
-    STSSegment* SearchSubs2(int t, double fps, /*[out]*/ int* iSegment=NULL, int* nSegments=NULL);
+    STSSegment* SearchSubs2(int t, double fps, /*[out]*/ int* iSegment = NULL, int* nSegments = NULL);
 
     const STSSegment* GetSegment(int iSegment) {return iSegment >= 0 && iSegment < (int)m_segments.GetCount() ? &m_segments[iSegment] : NULL;}
 
@@ -276,8 +270,8 @@ public:
     bool      IsEntryUnicode(int i);
     void      ConvertUnicode(int i, bool fUnicode);
 
-    CStringA GetStrA (int i, bool fSSA = false);
-    CStringW GetStrW (int i, bool fSSA = false);
+    CStringA GetStrA(int i, bool fSSA = false);
+    CStringW GetStrW(int i, bool fSSA = false);
     CStringW GetStrWA(int i, bool fSSA = false);
 
 #ifdef UNICODE
@@ -298,5 +292,5 @@ extern BYTE   CharSetList[];
 extern TCHAR* CharSetNames[];
 extern int    CharSetLen;
 
-class CHtmlColorMap : public CAtlMap<CString, DWORD, CStringElementTraits<CString> > {public: CHtmlColorMap();};
+class CHtmlColorMap : public CAtlMap<CString, DWORD, CStringElementTraits<CString>> {public: CHtmlColorMap();};
 extern CHtmlColorMap g_colors;
