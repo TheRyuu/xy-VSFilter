@@ -36,15 +36,13 @@ class CGolombBuffer;
 class CompositionObject : Rasterizer
 {
 public:
-    enum ColorType 
-    {
+    enum ColorType {
         NONE,
         YUV_Rec601,
         YUV_Rec709,
         RGB
     };
-    enum YuvRangeType 
-    {
+    enum YuvRangeType {
         RANGE_NONE
         , RANGE_TV
         , RANGE_PC
@@ -75,7 +73,7 @@ public:
     int   GetRLEDataSize() { return m_nRLEDataSize; };
     bool  IsRLEComplete() { return m_nRLEPos >= m_nRLEDataSize; };
     void  RenderHdmv(SubPicDesc& spd);
-    void  RenderDvb(SubPicDesc& spd, short nX, short nY, RECT *dirtyRect = NULL /* in-out */);
+    void  RenderDvb(SubPicDesc& spd, short nX, short nY, RECT* dirtyRect = NULL /* in-out */);
     void  WriteSeg(SubPicDesc& spd, short nX, short nY, short nCount, short nPaletteIndex);
     void  InitColor(const SubPicDesc& spd);
     void  SetPalette(int nNbEntry, HDMV_PALETTE* pPalette, ColorType color_type, YuvRangeType yuv_range);
@@ -88,8 +86,7 @@ public:
         CompositionObject* pCompositionObject = DEBUG_NEW CompositionObject();
 
         pCompositionObject->m_Palette.SetCount(m_Palette.GetCount());
-        for (int i=0,n=m_Palette.GetCount();i<n;i++)
-        {
+        for (int i = 0, n = m_Palette.GetCount(); i < n; i++) {
             pCompositionObject->m_Palette[i] = m_Palette[i];
         }
         pCompositionObject->m_OriginalColorType = m_OriginalColorType;
@@ -117,8 +114,8 @@ private:
     DWORD       m_Colors[256];
     int         m_colorType;
 
-    void  DvbRenderField(SubPicDesc& spd, CGolombBuffer& gb, short nXStart, short nYStart, short nLength, RECT *dirtyRect = NULL);
-    void  Dvb2PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT *dirtyRect = NULL);
-    void  Dvb4PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT *dirtyRect = NULL);
-    void  Dvb8PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT *dirtyRect = NULL);
+    void  DvbRenderField(SubPicDesc& spd, CGolombBuffer& gb, short nXStart, short nYStart, short nLength, RECT* dirtyRect = NULL);
+    void  Dvb2PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT* dirtyRect = NULL);
+    void  Dvb4PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT* dirtyRect = NULL);
+    void  Dvb8PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT* dirtyRect = NULL);
 };

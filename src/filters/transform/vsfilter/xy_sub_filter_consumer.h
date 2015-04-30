@@ -1,20 +1,20 @@
-/* 
- *	Copyright (C) 2003-2006 Gabest
- *	http://www.gabest.org
+/*
+ *  Copyright (C) 2003-2006 Gabest
+ *  http://www.gabest.org
  *
  *  This Program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2, or (at your option)
  *  any later version.
- *   
+ *
  *  This Program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
- *   
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with GNU Make; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. 
+ *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  *  http://www.gnu.org/copyleft/gpl.html
  *
  */
@@ -47,7 +47,7 @@ class XySubFilterConsumer
 
     bool AdjustFrameSize(CSize& s);
 
-    HRESULT TryNotCopy( IMediaSample* pIn, const CMediaType& mt, const BITMAPINFOHEADER& bihIn );
+    HRESULT TryNotCopy(IMediaSample* pIn, const CMediaType& mt, const BITMAPINFOHEADER& bihIn);
 
     ColorConvTable::YuvMatrixType m_video_yuv_matrix_decided_by_sub;
     ColorConvTable::YuvRangeType m_video_yuv_range_decided_by_sub;
@@ -76,23 +76,23 @@ public:
             CheckConnect(PIN_DIRECTION dir, IPin* pPin),
             CompleteConnect(PIN_DIRECTION dir, IPin* pReceivePin),
             BreakConnect(PIN_DIRECTION dir),
-            StartStreaming(), 
+            StartStreaming(),
             StopStreaming(),
             NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate);
 
     //CBaseVideoFilter
-    void GetInputColorspaces(ColorSpaceId *preferredOrder, UINT *count);
-    void GetOutputColorspaces(ColorSpaceId *preferredOrder, UINT *count);
+    void GetInputColorspaces(ColorSpaceId* preferredOrder, UINT* count);
+    void GetOutputColorspaces(ColorSpaceId* preferredOrder, UINT* count);
 
     //ISubRenderConsumer
-    STDMETHODIMP GetMerit(ULONG *merit);
-    STDMETHODIMP Connect(ISubRenderProvider *subtitleRenderer);
+    STDMETHODIMP GetMerit(ULONG* merit);
+    STDMETHODIMP Connect(ISubRenderProvider* subtitleRenderer);
     STDMETHODIMP Disconnect(void);
-    STDMETHODIMP DeliverFrame(REFERENCE_TIME start, REFERENCE_TIME stop, LPVOID context, ISubRenderFrame *subtitleFrame);
+    STDMETHODIMP DeliverFrame(REFERENCE_TIME start, REFERENCE_TIME stop, LPVOID context, ISubRenderFrame* subtitleFrame);
 
     // IXyOptions
-    STDMETHODIMP XySetBool     (unsigned field, bool      value);
-    STDMETHODIMP XySetInt      (unsigned field, int       value);
+    STDMETHODIMP XySetBool(unsigned field, bool      value);
+    STDMETHODIMP XySetInt(unsigned field, int       value);
 
     // ISpecifyPropertyPages
     STDMETHODIMP GetPages(CAUUID* pPages);

@@ -52,9 +52,9 @@ Range:
     {   1,  2*(1-Kb)      ,  0             , 0} \
 }
 
-const float MATRIX_BT_601    [3][4] = DEFINE_YUV_MATRIX    (0.299f , 0.587f , 0.114f );
-const float MATRIX_BT_601_INV[3][4] = DEFINE_YUV_MATRIX_INV(0.299f , 0.587f , 0.114f );
-const float MATRIX_BT_709    [3][4] = DEFINE_YUV_MATRIX    (0.2126f, 0.7152f, 0.0722f);
+const float MATRIX_BT_601    [3][4] = DEFINE_YUV_MATRIX(0.299f , 0.587f , 0.114f);
+const float MATRIX_BT_601_INV[3][4] = DEFINE_YUV_MATRIX_INV(0.299f , 0.587f , 0.114f);
+const float MATRIX_BT_709    [3][4] = DEFINE_YUV_MATRIX(0.2126f, 0.7152f, 0.0722f);
 const float MATRIX_BT_709_INV[3][4] = DEFINE_YUV_MATRIX_INV(0.2126f, 0.7152f, 0.0722f);
 const float YUV_PC           [3][4] = {
     {255,   0,   0,   0},
@@ -62,9 +62,9 @@ const float YUV_PC           [3][4] = {
     {  0,   0, 255, 128}
 };
 const float YUV_PC_INV       [3][4] = {
-    {1/255.0f,       0 ,       0 ,          0 },
-    {      0 , 1/255.0f,       0 , -128/255.0f},
-    {      0 ,       0 , 1/255.0f, -128/255.0f}
+    {1 / 255.0f,       0 ,       0 ,          0 },
+    {      0 , 1 / 255.0f,       0 , -128 / 255.0f},
+    {      0 ,       0 , 1 / 255.0f, -128 / 255.0f}
 };
 const float YUV_TV           [3][4] = {
     {219,   0,   0,  16},
@@ -72,9 +72,9 @@ const float YUV_TV           [3][4] = {
     {  0,   0, 224, 128}
 };
 const float YUV_TV_INV       [3][4] = {
-    {1/219.0f,       0 ,       0 , - 16/219.0f},
-    {      0 , 1/224.0f,       0 , -128/224.0f},
-    {      0 ,       0 , 1/224.0f, -128/224.0f}
+    {1 / 219.0f,       0 ,       0 , - 16 / 219.0f},
+    {      0 , 1 / 224.0f,       0 , -128 / 224.0f},
+    {      0 ,       0 , 1 / 224.0f, -128 / 224.0f}
 };
 const float RGB_PC           [3][4] = {
     {255,   0,   0,   0},
@@ -82,9 +82,9 @@ const float RGB_PC           [3][4] = {
     {  0,   0, 255,   0}
 };
 const float RGB_PC_INV       [3][4] = {
-    {1/255.0f,       0 ,       0 ,   0},
-    {      0 , 1/255.0f,       0 ,   0},
-    {      0 ,       0 , 1/255.0f,   0}
+    {1 / 255.0f,       0 ,       0 ,   0},
+    {      0 , 1 / 255.0f,       0 ,   0},
+    {      0 ,       0 , 1 / 255.0f,   0}
 };
 const float RGB_TV           [3][4] = {
     {219,   0,   0,  16},
@@ -92,9 +92,9 @@ const float RGB_TV           [3][4] = {
     {  0,   0, 219,  16}
 };
 const float RGB_TV_INV       [3][4] = {
-    {1/219.0f,       0 ,       0 , -16/219.0f},
-    {      0 , 1/219.0f,       0 , -16/219.0f},
-    {      0 ,       0 , 1/219.0f, -16/219.0f}
+    {1 / 219.0f,       0 ,       0 , -16 / 219.0f},
+    {      0 , 1 / 219.0f,       0 , -16 / 219.0f},
+    {      0 ,       0 , 1 / 219.0f, -16 / 219.0f}
 };
 const float IDENTITY         [3][4] = {
     {  1,   0,   0,   0},
@@ -104,57 +104,55 @@ const float IDENTITY         [3][4] = {
 
 inline int clip(int value, int upper_bound)
 {
-    value &= ~(value>>31);//value = value > 0 ? value : 0
-    return value^((value^upper_bound)&((upper_bound-value)>>31));//value = value < upper_bound ? value : upper_bound
+    value &= ~(value >> 31); //value = value > 0 ? value : 0
+    return value ^ ((value ^ upper_bound) & ((upper_bound - value) >> 31)); //value = value < upper_bound ? value : upper_bound
 }
 
 #define E(M,i,j) M[i*4+j]
 
-void MultiplyMatrix(float *lhs_in_out, const float *rhs)
+void MultiplyMatrix(float* lhs_in_out, const float* rhs)
 {
     float tmp1;
     float tmp2;
     float tmp3;
 
-    tmp1 = E(lhs_in_out,0,0);
-    tmp2 = E(lhs_in_out,0,1);
-    tmp3 = E(lhs_in_out,0,2);
+    tmp1 = E(lhs_in_out, 0, 0);
+    tmp2 = E(lhs_in_out, 0, 1);
+    tmp3 = E(lhs_in_out, 0, 2);
 
-    E(lhs_in_out,0,0) = tmp1 * E(rhs,0,0) + tmp2 * E(rhs,1,0) + tmp3 * E(rhs,2,0);
-    E(lhs_in_out,0,1) = tmp1 * E(rhs,0,1) + tmp2 * E(rhs,1,1) + tmp3 * E(rhs,2,1);
-    E(lhs_in_out,0,2) = tmp1 * E(rhs,0,2) + tmp2 * E(rhs,1,2) + tmp3 * E(rhs,2,2);
-    E(lhs_in_out,0,3) = tmp1 * E(rhs,0,3) + tmp2 * E(rhs,1,3) + tmp3 * E(rhs,2,3)+ E(lhs_in_out,0,3);
+    E(lhs_in_out, 0, 0) = tmp1 * E(rhs, 0, 0) + tmp2 * E(rhs, 1, 0) + tmp3 * E(rhs, 2, 0);
+    E(lhs_in_out, 0, 1) = tmp1 * E(rhs, 0, 1) + tmp2 * E(rhs, 1, 1) + tmp3 * E(rhs, 2, 1);
+    E(lhs_in_out, 0, 2) = tmp1 * E(rhs, 0, 2) + tmp2 * E(rhs, 1, 2) + tmp3 * E(rhs, 2, 2);
+    E(lhs_in_out, 0, 3) = tmp1 * E(rhs, 0, 3) + tmp2 * E(rhs, 1, 3) + tmp3 * E(rhs, 2, 3) + E(lhs_in_out, 0, 3);
 
-    tmp1 = E(lhs_in_out,1,0);
-    tmp2 = E(lhs_in_out,1,1);
-    tmp3 = E(lhs_in_out,1,2);
+    tmp1 = E(lhs_in_out, 1, 0);
+    tmp2 = E(lhs_in_out, 1, 1);
+    tmp3 = E(lhs_in_out, 1, 2);
 
-    E(lhs_in_out,1,0) = tmp1 * E(rhs,0,0) + tmp2 * E(rhs,1,0) + tmp3 * E(rhs,2,0);
-    E(lhs_in_out,1,1) = tmp1 * E(rhs,0,1) + tmp2 * E(rhs,1,1) + tmp3 * E(rhs,2,1);
-    E(lhs_in_out,1,2) = tmp1 * E(rhs,0,2) + tmp2 * E(rhs,1,2) + tmp3 * E(rhs,2,2);
-    E(lhs_in_out,1,3) = tmp1 * E(rhs,0,3) + tmp2 * E(rhs,1,3) + tmp3 * E(rhs,2,3)+ E(lhs_in_out,1,3);
+    E(lhs_in_out, 1, 0) = tmp1 * E(rhs, 0, 0) + tmp2 * E(rhs, 1, 0) + tmp3 * E(rhs, 2, 0);
+    E(lhs_in_out, 1, 1) = tmp1 * E(rhs, 0, 1) + tmp2 * E(rhs, 1, 1) + tmp3 * E(rhs, 2, 1);
+    E(lhs_in_out, 1, 2) = tmp1 * E(rhs, 0, 2) + tmp2 * E(rhs, 1, 2) + tmp3 * E(rhs, 2, 2);
+    E(lhs_in_out, 1, 3) = tmp1 * E(rhs, 0, 3) + tmp2 * E(rhs, 1, 3) + tmp3 * E(rhs, 2, 3) + E(lhs_in_out, 1, 3);
 
-    tmp1 = E(lhs_in_out,2,0);
-    tmp2 = E(lhs_in_out,2,1);
-    tmp3 = E(lhs_in_out,2,2);
+    tmp1 = E(lhs_in_out, 2, 0);
+    tmp2 = E(lhs_in_out, 2, 1);
+    tmp3 = E(lhs_in_out, 2, 2);
 
-    E(lhs_in_out,2,0) = tmp1 * E(rhs,0,0) + tmp2 * E(rhs,1,0) + tmp3 * E(rhs,2,0);
-    E(lhs_in_out,2,1) = tmp1 * E(rhs,0,1) + tmp2 * E(rhs,1,1) + tmp3 * E(rhs,2,1);
-    E(lhs_in_out,2,2) = tmp1 * E(rhs,0,2) + tmp2 * E(rhs,1,2) + tmp3 * E(rhs,2,2);
-    E(lhs_in_out,2,3) = tmp1 * E(rhs,0,3) + tmp2 * E(rhs,1,3) + tmp3 * E(rhs,2,3)+ E(lhs_in_out,2,3);
+    E(lhs_in_out, 2, 0) = tmp1 * E(rhs, 0, 0) + tmp2 * E(rhs, 1, 0) + tmp3 * E(rhs, 2, 0);
+    E(lhs_in_out, 2, 1) = tmp1 * E(rhs, 0, 1) + tmp2 * E(rhs, 1, 1) + tmp3 * E(rhs, 2, 1);
+    E(lhs_in_out, 2, 2) = tmp1 * E(rhs, 0, 2) + tmp2 * E(rhs, 1, 2) + tmp3 * E(rhs, 2, 2);
+    E(lhs_in_out, 2, 3) = tmp1 * E(rhs, 0, 3) + tmp2 * E(rhs, 1, 3) + tmp3 * E(rhs, 2, 3) + E(lhs_in_out, 2, 3);
 }
 
 class ConvMatrix
 {
 public:
-    enum LevelType
-    {
+    enum LevelType {
         LEVEL_TV,
         LEVEL_PC,
         LEVEL_COUNT
     };
-    enum ColorType
-    {
+    enum ColorType {
         COLOR_YUV_601,
         COLOR_YUV_709,
         COLOR_RGB,
@@ -166,35 +164,33 @@ public:
 
     bool Init();
     DWORD Convert(int x1, int x2, int x3, int in_level, int in_type, int out_level, int out_type);
-    static DWORD DoConvert(int x1, int x2, int x3, const int *matrix);
+    static DWORD DoConvert(int x1, int x2, int x3, const int* matrix);
 
-    DWORD VSFilterCompactCorretion( int r8, int g8, int b8, int output_rgb_level );
+    DWORD VSFilterCompactCorretion(int r8, int g8, int b8, int output_rgb_level);
     void InitMatrix(int in_level, int in_type, int out_level, int out_type);
     void InitVSFilterCompactCorretionMatrix();
 private:
-    const float * MATRIX_DE_QUAN  [LEVEL_COUNT][COLOR_COUNT];
-    const float * MATRIX_INV_TRANS[COLOR_COUNT];
-    const float * MATRIX_TRANS    [COLOR_COUNT];
-    const float * MATRIX_QUAN     [LEVEL_COUNT][COLOR_COUNT];
+    const float* MATRIX_DE_QUAN  [LEVEL_COUNT][COLOR_COUNT];
+    const float* MATRIX_INV_TRANS[COLOR_COUNT];
+    const float* MATRIX_TRANS    [COLOR_COUNT];
+    const float* MATRIX_QUAN     [LEVEL_COUNT][COLOR_COUNT];
 
     //m_matrix[in_level][in_type][out_level][out_type]
-    int * m_matrix[LEVEL_COUNT][COLOR_COUNT][LEVEL_COUNT][COLOR_COUNT];
+    int* m_matrix[LEVEL_COUNT][COLOR_COUNT][LEVEL_COUNT][COLOR_COUNT];
 
     int m_matrix_vsfilter_compact_corretion[LEVEL_COUNT][3][4];
 };
 
 ConvMatrix::ConvMatrix()
 {
-    memset(m_matrix, 0, LEVEL_COUNT*COLOR_COUNT*LEVEL_COUNT*COLOR_COUNT*sizeof(float*));
+    memset(m_matrix, 0, LEVEL_COUNT * COLOR_COUNT * LEVEL_COUNT * COLOR_COUNT * sizeof(float*));
 }
 
 ConvMatrix::~ConvMatrix()
 {
-    int * *p_matrix = (int **)m_matrix;
-    for(int i=0;i<LEVEL_COUNT*COLOR_COUNT*LEVEL_COUNT*COLOR_COUNT;i++)
-    {
-        if (p_matrix[i])
-        {
+    int * *p_matrix = (int**)m_matrix;
+    for (int i = 0; i < LEVEL_COUNT * COLOR_COUNT * LEVEL_COUNT * COLOR_COUNT; i++) {
+        if (p_matrix[i]) {
             delete [] p_matrix[i];
             p_matrix[i] = NULL;
         }
@@ -240,98 +236,91 @@ bool ConvMatrix::Init()
     return true;
 };
 
-void ConvMatrix::InitMatrix( int in_level, int in_type, int out_level, int out_type )
+void ConvMatrix::InitMatrix(int in_level, int in_type, int out_level, int out_type)
 {
-    int * &out_matrix = m_matrix[in_level][in_type][out_level][out_type];
-    if (!out_matrix)
-    {
+    int*& out_matrix = m_matrix[in_level][in_type][out_level][out_type];
+    if (!out_matrix) {
         return;
     }
-    out_matrix = DEBUG_NEW int[3*4];
+    out_matrix = DEBUG_NEW int[3 * 4];
     ASSERT(out_matrix);
 
     float matrix[3][4];
-    float *p_matrix = &matrix[0][0];
-    memcpy(p_matrix, MATRIX_QUAN[out_level][out_type], 3*4*sizeof(float));
+    float* p_matrix = &matrix[0][0];
+    memcpy(p_matrix, MATRIX_QUAN[out_level][out_type], 3 * 4 * sizeof(float));
     MultiplyMatrix(p_matrix, MATRIX_TRANS[out_type]);
     MultiplyMatrix(p_matrix, MATRIX_INV_TRANS[in_type]);
     MultiplyMatrix(p_matrix, MATRIX_DE_QUAN[in_level][in_type]);
-    for (int i=0;i<3*4;i++)
-    {
-        out_matrix[i] = p_matrix[i] * (1<<16) + 0.5f;
-        ASSERT(out_matrix[i] < (1<<24));
+    for (int i = 0; i < 3 * 4; i++) {
+        out_matrix[i] = p_matrix[i] * (1 << 16) + 0.5f;
+        ASSERT(out_matrix[i] < (1 << 24));
     }
 }
 
 void ConvMatrix::InitVSFilterCompactCorretionMatrix()
 {
-    int * out_matrix = &m_matrix_vsfilter_compact_corretion[LEVEL_PC][0][0];
+    int* out_matrix = &m_matrix_vsfilter_compact_corretion[LEVEL_PC][0][0];
 
     float matrix[3][4];
-    float *p_matrix = &matrix[0][0];
-    memcpy(p_matrix, MATRIX_INV_TRANS[COLOR_YUV_709], 3*4*sizeof(float));
+    float* p_matrix = &matrix[0][0];
+    memcpy(p_matrix, MATRIX_INV_TRANS[COLOR_YUV_709], 3 * 4 * sizeof(float));
     MultiplyMatrix(p_matrix, MATRIX_TRANS[COLOR_YUV_601]);
-    for (int i=0;i<3*4;i++)
-    {
-        out_matrix[i] = p_matrix[i] * (1<<16) + 0.5f;
-        ASSERT(out_matrix[i] < (1<<24));
+    for (int i = 0; i < 3 * 4; i++) {
+        out_matrix[i] = p_matrix[i] * (1 << 16) + 0.5f;
+        ASSERT(out_matrix[i] < (1 << 24));
     }
 
     out_matrix = &m_matrix_vsfilter_compact_corretion[LEVEL_TV][0][0];
-    memcpy(p_matrix, MATRIX_QUAN[LEVEL_TV][COLOR_RGB], 3*4*sizeof(float));
+    memcpy(p_matrix, MATRIX_QUAN[LEVEL_TV][COLOR_RGB], 3 * 4 * sizeof(float));
     MultiplyMatrix(p_matrix, MATRIX_INV_TRANS[COLOR_YUV_709]);
     MultiplyMatrix(p_matrix, MATRIX_TRANS[COLOR_YUV_601]);
     MultiplyMatrix(p_matrix, MATRIX_DE_QUAN[LEVEL_PC][COLOR_RGB]);
-    for (int i=0;i<3*4;i++)
-    {
-        out_matrix[i] = p_matrix[i] * (1<<16) + 0.5f;
-        ASSERT(out_matrix[i] < (1<<24));
+    for (int i = 0; i < 3 * 4; i++) {
+        out_matrix[i] = p_matrix[i] * (1 << 16) + 0.5f;
+        ASSERT(out_matrix[i] < (1 << 24));
     }
 }
 
 DWORD ConvMatrix::Convert(int x1, int x2, int x3, int in_level, int in_type, int out_level, int out_type)
 {
-    int * &matrix_int = m_matrix[in_level][in_type][out_level][out_type];
-    if (!matrix_int)
-    {
+    int*& matrix_int = m_matrix[in_level][in_type][out_level][out_type];
+    if (!matrix_int) {
         InitMatrix(in_level, in_type, out_level, out_type);
         ASSERT(matrix_int);
     }
-    return DoConvert(x1,x2,x3,matrix_int);
+    return DoConvert(x1, x2, x3, matrix_int);
 }
 
-DWORD ConvMatrix::DoConvert( int x1, int x2, int x3, const int *matrix )
+DWORD ConvMatrix::DoConvert(int x1, int x2, int x3, const int* matrix)
 {
     ASSERT(matrix);
-    int tmp1 = (E(matrix,0,0) * x1 + E(matrix,0,1) * x2 + E(matrix,0,2) * x3 + E(matrix,0,3) + (1<<15)) >> 16;
-    int tmp2 = (E(matrix,1,0) * x1 + E(matrix,1,1) * x2 + E(matrix,1,2) * x3 + E(matrix,1,3) + (1<<15)) >> 16;
-    int tmp3 = (E(matrix,2,0) * x1 + E(matrix,2,1) * x2 + E(matrix,2,2) * x3 + E(matrix,2,3) + (1<<15)) >> 16;
+    int tmp1 = (E(matrix, 0, 0) * x1 + E(matrix, 0, 1) * x2 + E(matrix, 0, 2) * x3 + E(matrix, 0, 3) + (1 << 15)) >> 16;
+    int tmp2 = (E(matrix, 1, 0) * x1 + E(matrix, 1, 1) * x2 + E(matrix, 1, 2) * x3 + E(matrix, 1, 3) + (1 << 15)) >> 16;
+    int tmp3 = (E(matrix, 2, 0) * x1 + E(matrix, 2, 1) * x2 + E(matrix, 2, 2) * x3 + E(matrix, 2, 3) + (1 << 15)) >> 16;
     tmp1 = clip(tmp1, 255);
     tmp2 = clip(tmp2, 255);
     tmp3 = clip(tmp3, 255);
-    return (tmp1<<16) | (tmp2<<8) | tmp3;
+    return (tmp1 << 16) | (tmp2 << 8) | tmp3;
 }
 
-DWORD ConvMatrix::VSFilterCompactCorretion( int r8, int g8, int b8, int output_rgb_level )
+DWORD ConvMatrix::VSFilterCompactCorretion(int r8, int g8, int b8, int output_rgb_level)
 {
-    ASSERT(output_rgb_level==LEVEL_PC || output_rgb_level==LEVEL_TV);
+    ASSERT(output_rgb_level == LEVEL_PC || output_rgb_level == LEVEL_TV);
     return DoConvert(r8, g8, b8, &m_matrix_vsfilter_compact_corretion[output_rgb_level][0][0]);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 const int FRACTION_BITS  = 16;
-const int FRACTION_SCALE = 1<<16;
+const int FRACTION_SCALE = 1 << 16;
 
-struct RGBLevelInfo
-{
+struct RGBLevelInfo {
     int low, size;
 };
 const RGBLevelInfo RGB_LVL_PC = {  0, 255 };
 const RGBLevelInfo RGB_LVL_TV = { 16, 219 };
 
-struct YUVLevelInfo
-{
+struct YUVLevelInfo {
     int y_low, y_size;
     int u_mid, u_size;
 };
@@ -524,8 +513,7 @@ bool ConvFunc::InitConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
 {
     bool result = true;
 
-    if ( yuv_type==ColorConvTable::BT601 && range==ColorConvTable::RANGE_TV )
-    {
+    if (yuv_type == ColorConvTable::BT601 && range == ColorConvTable::RANGE_TV) {
         r8g8b8_to_yuv_func        = RGB_PC_TO_YUV_TV_601;
         r8g8b8_to_uyv_func        = RGB_PC_TO_UYV_TV_601;
         pre_mul_argb_to_ayuv_func = PREMUL_ARGB_PC_TO_AYUV_TV_601;
@@ -534,9 +522,7 @@ bool ConvFunc::InitConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
 
         _yuv_type   = yuv_type;
         _range_type = range;
-    }
-    else if ( yuv_type==ColorConvTable::BT709 && range==ColorConvTable::RANGE_TV )
-    {
+    } else if (yuv_type == ColorConvTable::BT709 && range == ColorConvTable::RANGE_TV) {
         r8g8b8_to_yuv_func        = RGB_PC_TO_YUV_TV_709;
         r8g8b8_to_uyv_func        = RGB_PC_TO_UYV_TV_709;
         pre_mul_argb_to_ayuv_func = PREMUL_ARGB_PC_TO_AYUV_TV_709;
@@ -545,9 +531,7 @@ bool ConvFunc::InitConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
 
         _yuv_type   = yuv_type;
         _range_type = range;
-    }
-    else if ( yuv_type==ColorConvTable::BT601 && range==ColorConvTable::RANGE_PC )
-    {
+    } else if (yuv_type == ColorConvTable::BT601 && range == ColorConvTable::RANGE_PC) {
         r8g8b8_to_yuv_func        = RGB_PC_TO_YUV_PC_601;
         r8g8b8_to_uyv_func        = RGB_PC_TO_UYV_PC_601;
         pre_mul_argb_to_ayuv_func = PREMUL_ARGB_PC_TO_AYUV_PC_601;
@@ -556,9 +540,7 @@ bool ConvFunc::InitConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
 
         _yuv_type   = yuv_type;
         _range_type = range;
-    }
-    else if ( yuv_type==ColorConvTable::BT709 && range==ColorConvTable::RANGE_PC )
-    {
+    } else if (yuv_type == ColorConvTable::BT709 && range == ColorConvTable::RANGE_PC) {
         r8g8b8_to_yuv_func        = RGB_PC_TO_YUV_PC_709;
         r8g8b8_to_uyv_func        = RGB_PC_TO_UYV_PC_709;
         pre_mul_argb_to_ayuv_func = PREMUL_ARGB_PC_TO_AYUV_PC_709;
@@ -567,9 +549,7 @@ bool ConvFunc::InitConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
 
         _yuv_type   = yuv_type;
         _range_type = range;
-    }
-    else
-    {
+    } else {
         r8g8b8_to_yuv_func        = RGB_PC_TO_YUV_TV_601;
         r8g8b8_to_uyv_func        = RGB_PC_TO_UYV_TV_601;
         pre_mul_argb_to_ayuv_func = PREMUL_ARGB_PC_TO_AYUV_TV_601;
@@ -583,7 +563,7 @@ bool ConvFunc::InitConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
     return result;
 }
 
-ConvFunc::ConvFunc( YuvMatrixType yuv_type, YuvRangeType range )
+ConvFunc::ConvFunc(YuvMatrixType yuv_type, YuvRangeType range)
 {
     _conv_matrix.Init();
     _conv_matrix.InitMatrix(
@@ -627,15 +607,14 @@ ColorConvTable::YuvRangeType ColorConvTable::GetDefaultRangeType()
     return s_default_conv_set._range_type;
 }
 
-void ColorConvTable::SetDefaultConvType( YuvMatrixType yuv_type, YuvRangeType range )
+void ColorConvTable::SetDefaultConvType(YuvMatrixType yuv_type, YuvRangeType range)
 {
-    if( s_default_conv_set._yuv_type != yuv_type || s_default_conv_set._range_type != range )
-    {
+    if (s_default_conv_set._yuv_type != yuv_type || s_default_conv_set._range_type != range) {
         s_default_conv_set.InitConvFunc(yuv_type, range);
     }
 }
 
-DWORD ColorConvTable::Argb2Auyv( DWORD argb )
+DWORD ColorConvTable::Argb2Auyv(DWORD argb)
 {
     int r = (argb & 0x00ff0000) >> 16;
     int g = (argb & 0x0000ff00) >> 8;
@@ -643,7 +622,7 @@ DWORD ColorConvTable::Argb2Auyv( DWORD argb )
     return (argb & 0xff000000) | s_default_conv_set.r8g8b8_to_uyv_func(r, g, b);
 }
 
-DWORD ColorConvTable::Argb2Ayuv( DWORD argb )
+DWORD ColorConvTable::Argb2Ayuv(DWORD argb)
 {
     int r = (argb & 0x00ff0000) >> 16;
     int g = (argb & 0x0000ff00) >> 8;
@@ -651,7 +630,7 @@ DWORD ColorConvTable::Argb2Ayuv( DWORD argb )
     return (argb & 0xff000000) | s_default_conv_set.r8g8b8_to_yuv_func(r, g, b);
 }
 
-DWORD ColorConvTable::Argb2Ayuv_TV_BT601( DWORD argb )
+DWORD ColorConvTable::Argb2Ayuv_TV_BT601(DWORD argb)
 {
     int r = (argb & 0x00ff0000) >> 16;
     int g = (argb & 0x0000ff00) >> 8;
@@ -659,24 +638,24 @@ DWORD ColorConvTable::Argb2Ayuv_TV_BT601( DWORD argb )
     return (argb & 0xff000000) | RGB_PC_TO_YUV_TV_601(r, g, b);
 }
 
-DWORD ColorConvTable::Ayuv2Auyv( DWORD ayuv )
+DWORD ColorConvTable::Ayuv2Auyv(DWORD ayuv)
 {
     int y = (ayuv & 0x00ff0000) >> 8;
     int u = (ayuv & 0x0000ff00) << 8;
-    return (ayuv & 0xff0000ff)| u | y;
+    return (ayuv & 0xff0000ff) | u | y;
 }
 
-DWORD ColorConvTable::PreMulArgb2Ayuv( int a8, int r8, int g8, int b8 )
+DWORD ColorConvTable::PreMulArgb2Ayuv(int a8, int r8, int g8, int b8)
 {
     return s_default_conv_set.pre_mul_argb_to_ayuv_func(a8, r8, g8, b8);
 }
 
-DWORD ColorConvTable::Rgb2Y( int r8, int g8, int b8 )
+DWORD ColorConvTable::Rgb2Y(int r8, int g8, int b8)
 {
     return s_default_conv_set.r8g8b8_to_y_func(r8, g8, b8);
 }
 
-DWORD ColorConvTable::Ayuv2Argb_TV_BT601( DWORD ayuv )
+DWORD ColorConvTable::Ayuv2Argb_TV_BT601(DWORD ayuv)
 {
     int y = (ayuv & 0x00ff0000) >> 16;
     int u = (ayuv & 0x0000ff00) >> 8;
@@ -684,7 +663,7 @@ DWORD ColorConvTable::Ayuv2Argb_TV_BT601( DWORD ayuv )
     return (ayuv & 0xff000000) | YUV_TV_TO_RGB_PC_601(y, u, v);
 }
 
-DWORD ColorConvTable::Ayuv2Argb_TV_BT709( DWORD ayuv )
+DWORD ColorConvTable::Ayuv2Argb_TV_BT709(DWORD ayuv)
 {
     int y = (ayuv & 0x00ff0000) >> 16;
     int u = (ayuv & 0x0000ff00) >> 8;
@@ -692,7 +671,7 @@ DWORD ColorConvTable::Ayuv2Argb_TV_BT709( DWORD ayuv )
     return (ayuv & 0xff000000) | YUV_TV_TO_RGB_PC_709(y, u, v);
 }
 
-DWORD ColorConvTable::Ayuv2Argb( DWORD ayuv )
+DWORD ColorConvTable::Ayuv2Argb(DWORD ayuv)
 {
     int y = (ayuv & 0x00ff0000) >> 16;
     int u = (ayuv & 0x0000ff00) >> 8;
@@ -700,65 +679,65 @@ DWORD ColorConvTable::Ayuv2Argb( DWORD ayuv )
     return (ayuv & 0xff000000) | s_default_conv_set.y8u8v8_to_rgb_func(y, u, v);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_To_ARGB_TV_BT601( int a8, int y8, int u8, int v8 )
+DWORD ColorConvTable::A8Y8U8V8_To_ARGB_TV_BT601(int a8, int y8, int u8, int v8)
 {
-    return (a8<<24) | YUV_TV_TO_RGB_PC_601(y8, u8, v8);
+    return (a8 << 24) | YUV_TV_TO_RGB_PC_601(y8, u8, v8);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_To_ARGB_PC_BT601( int a8, int y8, int u8, int v8 )
+DWORD ColorConvTable::A8Y8U8V8_To_ARGB_PC_BT601(int a8, int y8, int u8, int v8)
 {
-    return (a8<<24) | YUV_PC_TO_RGB_PC_601(y8, u8, v8);
+    return (a8 << 24) | YUV_PC_TO_RGB_PC_601(y8, u8, v8);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_To_ARGB_TV_BT709( int a8, int y8, int u8, int v8 )
+DWORD ColorConvTable::A8Y8U8V8_To_ARGB_TV_BT709(int a8, int y8, int u8, int v8)
 {
-    return (a8<<24) | YUV_TV_TO_RGB_PC_709(y8, u8, v8);
+    return (a8 << 24) | YUV_TV_TO_RGB_PC_709(y8, u8, v8);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_To_ARGB_PC_BT709( int a8, int y8, int u8, int v8 )
+DWORD ColorConvTable::A8Y8U8V8_To_ARGB_PC_BT709(int a8, int y8, int u8, int v8)
 {
-    return (a8<<24) | YUV_PC_TO_RGB_PC_709(y8, u8, v8);
+    return (a8 << 24) | YUV_PC_TO_RGB_PC_709(y8, u8, v8);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_PC_To_TV( int a8, int y8, int u8, int v8 )
+DWORD ColorConvTable::A8Y8U8V8_PC_To_TV(int a8, int y8, int u8, int v8)
 {
-    const int FRACTION_SCALE = 1<<16;
+    const int FRACTION_SCALE = 1 << 16;
     const int YUV_MIN = 16;
-    const int cy = int(219.0/255*FRACTION_SCALE+0.5);
-    const int cuv = int(224.0/255*FRACTION_SCALE+0.5);
-    y8 = ((y8*cy)>>16) + YUV_MIN;
-    u8 = ((u8*cuv)>>16) + YUV_MIN;
-    v8 = ((v8*cuv)>>16) + YUV_MIN;
-    return (a8<<24) | (y8<<16) | (u8<<8) | v8;
+    const int cy = int(219.0 / 255 * FRACTION_SCALE + 0.5);
+    const int cuv = int(224.0 / 255 * FRACTION_SCALE + 0.5);
+    y8 = ((y8 * cy) >> 16) + YUV_MIN;
+    u8 = ((u8 * cuv) >> 16) + YUV_MIN;
+    v8 = ((v8 * cuv) >> 16) + YUV_MIN;
+    return (a8 << 24) | (y8 << 16) | (u8 << 8) | v8;
 }
 
-DWORD ColorConvTable::A8Y8U8V8_TV_To_PC( int a8, int y8, int u8, int v8 )
+DWORD ColorConvTable::A8Y8U8V8_TV_To_PC(int a8, int y8, int u8, int v8)
 {
-    const int FRACTION_SCALE = 1<<16;
+    const int FRACTION_SCALE = 1 << 16;
     const int YUV_MIN = 16;
-    const int cy = int(255/219.0*FRACTION_SCALE+0.5);
-    const int cuv = int(255/224.0*FRACTION_SCALE+0.5);
-    y8 = ((y8-YUV_MIN)*cy)>>16;
-    u8 = ((u8-YUV_MIN)*cuv)>>16;
-    v8 = ((v8-YUV_MIN)*cuv)>>16;
-    return (a8<<24) | (y8<<16) | (u8<<8) | v8;
+    const int cy = int(255 / 219.0 * FRACTION_SCALE + 0.5);
+    const int cuv = int(255 / 224.0 * FRACTION_SCALE + 0.5);
+    y8 = ((y8 - YUV_MIN) * cy) >> 16;
+    u8 = ((u8 - YUV_MIN) * cuv) >> 16;
+    v8 = ((v8 - YUV_MIN) * cuv) >> 16;
+    return (a8 << 24) | (y8 << 16) | (u8 << 8) | v8;
 }
 
-DWORD ColorConvTable::RGB_PC_TO_TV( DWORD argb )
+DWORD ColorConvTable::RGB_PC_TO_TV(DWORD argb)
 {
     const int MIN = 16;
-    const int SCALE = int(219.0/255*FRACTION_SCALE+0.5);
-    DWORD r = (argb & 0x00ff0000)>>16;
-    DWORD g = (argb & 0x0000ff00)>>8;
+    const int SCALE = int(219.0 / 255 * FRACTION_SCALE + 0.5);
+    DWORD r = (argb & 0x00ff0000) >> 16;
+    DWORD g = (argb & 0x0000ff00) >> 8;
     DWORD b = (argb & 0x000000ff);
-    r = ((r*SCALE)>>16) + MIN;
-    g = ((g*SCALE)>>16) + MIN;
-    b = ((b*SCALE)>>16) + MIN;
-    return (argb & 0xff000000)|(r<<16)|(g<<8)|b;
+    r = ((r * SCALE) >> 16) + MIN;
+    g = ((g * SCALE) >> 16) + MIN;
+    b = ((b * SCALE) >> 16) + MIN;
+    return (argb & 0xff000000) | (r << 16) | (g << 8) | b;
 }
 
-DWORD ColorConvTable::A8Y8U8V8_TO_AYUV( int a8, int y8, int u8, int v8,
-    YuvRangeType in_range, YuvMatrixType in_type, YuvRangeType out_range, YuvMatrixType out_type )
+DWORD ColorConvTable::A8Y8U8V8_TO_AYUV(int a8, int y8, int u8, int v8,
+                                       YuvRangeType in_range, YuvMatrixType in_type, YuvRangeType out_range, YuvMatrixType out_type)
 {
     const int level_map[3] = {
         ConvMatrix::LEVEL_TV,
@@ -777,33 +756,27 @@ DWORD ColorConvTable::A8Y8U8V8_TO_AYUV( int a8, int y8, int u8, int v8,
     //type_map[ColorConvTable::NONE]        = ConvMatrix::COLOR_YUV_601;
     //type_map[ColorConvTable::BT601]       = ConvMatrix::COLOR_YUV_601;
     //type_map[ColorConvTable::BT709]       = ConvMatrix::COLOR_YUV_709;
-    if (in_type==out_type)
-    {
-        if (in_range==RANGE_PC && out_range==RANGE_TV)
-        {
-            return A8Y8U8V8_PC_To_TV(a8,y8,u8,v8);
-        }
-        else if (in_range==RANGE_TV && out_range==RANGE_PC)
-        {
-            return A8Y8U8V8_TV_To_PC(a8,y8,u8,v8);
-        }
-        else
-        {
-            return (a8<<24) | (y8<<16) | (u8<<8) | v8;
+    if (in_type == out_type) {
+        if (in_range == RANGE_PC && out_range == RANGE_TV) {
+            return A8Y8U8V8_PC_To_TV(a8, y8, u8, v8);
+        } else if (in_range == RANGE_TV && out_range == RANGE_PC) {
+            return A8Y8U8V8_TV_To_PC(a8, y8, u8, v8);
+        } else {
+            return (a8 << 24) | (y8 << 16) | (u8 << 8) | v8;
         }
     }
-    return (a8<<24) | s_default_conv_set._conv_matrix.Convert(y8, u8, v8, 
-        level_map[in_range], type_map[in_type], level_map[out_range], type_map[out_type]);
+    return (a8 << 24) | s_default_conv_set._conv_matrix.Convert(y8, u8, v8,
+                                                                level_map[in_range], type_map[in_type], level_map[out_range], type_map[out_type]);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_TO_CUR_AYUV( int a8, int y8, int u8, int v8, YuvRangeType in_range, YuvMatrixType in_type )
+DWORD ColorConvTable::A8Y8U8V8_TO_CUR_AYUV(int a8, int y8, int u8, int v8, YuvRangeType in_range, YuvMatrixType in_type)
 {
-    return A8Y8U8V8_TO_AYUV(a8,y8,u8,v8,in_range,in_type,
-        s_default_conv_set._range_type,s_default_conv_set._yuv_type);
+    return A8Y8U8V8_TO_AYUV(a8, y8, u8, v8, in_range, in_type,
+                            s_default_conv_set._range_type, s_default_conv_set._yuv_type);
 }
 
-DWORD ColorConvTable::A8Y8U8V8_TO_ARGB( int a8, int y8, int u8, int v8, YuvRangeType in_range, YuvMatrixType in_type
-    , bool output_tv_level )
+DWORD ColorConvTable::A8Y8U8V8_TO_ARGB(int a8, int y8, int u8, int v8, YuvRangeType in_range, YuvMatrixType in_type
+                                       , bool output_tv_level)
 {
     const ConvFunc::Y8U8V8ToRGBFunc funcs[2][2][2] = {
         {
@@ -815,21 +788,20 @@ DWORD ColorConvTable::A8Y8U8V8_TO_ARGB( int a8, int y8, int u8, int v8, YuvRange
             {YUV_PC_TO_RGB_TV_709, YUV_PC_TO_RGB_PC_709}
         }
     };
-    return (a8<<24) | funcs[in_range==RANGE_PC?1:0][in_type==BT709?1:0][output_tv_level?0:1](y8,u8,v8);
+    return (a8 << 24) | funcs[in_range == RANGE_PC ? 1 : 0][in_type == BT709 ? 1 : 0][output_tv_level ? 0 : 1](y8, u8, v8);
 }
 
-DWORD ColorConvTable::VSFilterCompactCorretion( DWORD argb, bool output_tv_level )
+DWORD ColorConvTable::VSFilterCompactCorretion(DWORD argb, bool output_tv_level)
 {
     int r = (argb & 0x00ff0000) >> 16;
     int g = (argb & 0x0000ff00) >> 8;
     int b = (argb & 0x000000ff);
-    return (argb & 0xff000000) | 
-        s_default_conv_set._conv_matrix.VSFilterCompactCorretion(r,g,b,
-            output_tv_level?ConvMatrix::LEVEL_TV : ConvMatrix::LEVEL_PC);
+    return (argb & 0xff000000) |
+           s_default_conv_set._conv_matrix.VSFilterCompactCorretion(r, g, b,
+                                                                    output_tv_level ? ConvMatrix::LEVEL_TV : ConvMatrix::LEVEL_PC);
 }
 
-struct YuvPos
-{
+struct YuvPos {
     int y;
     int u;
     int v;
@@ -858,13 +830,13 @@ DEFINE_RGB2YUV_FUNC(RGB_TV_TO_UYV_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 
 DEFINE_RGB2YUV_FUNC(RGB_TV_TO_UYV_TV_709, RGB_LVL_PC, YUV_LVL_TV, 0.2126, 0.7152, 0.0722, POS_UYV)
 DEFINE_RGB2YUV_FUNC(RGB_TV_TO_UYV_PC_709, RGB_LVL_PC, YUV_LVL_PC, 0.2126, 0.7152, 0.0722, POS_UYV)
 
-DEFINE_YUV2RGB_FUNC(YUV_TV_TO_RGB_PC_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114 )
-DEFINE_YUV2RGB_FUNC(YUV_PC_TO_RGB_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114 )
+DEFINE_YUV2RGB_FUNC(YUV_TV_TO_RGB_PC_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114)
+DEFINE_YUV2RGB_FUNC(YUV_PC_TO_RGB_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114)
 DEFINE_YUV2RGB_FUNC(YUV_TV_TO_RGB_PC_709, RGB_LVL_PC, YUV_LVL_TV, 0.2126, 0.7152, 0.0722)
 DEFINE_YUV2RGB_FUNC(YUV_PC_TO_RGB_PC_709, RGB_LVL_PC, YUV_LVL_PC, 0.2126, 0.7152, 0.0722)
 
-DEFINE_YUV2RGB_FUNC(YUV_TV_TO_RGB_TV_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114 )
-DEFINE_YUV2RGB_FUNC(YUV_PC_TO_RGB_TV_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114 )
+DEFINE_YUV2RGB_FUNC(YUV_TV_TO_RGB_TV_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114)
+DEFINE_YUV2RGB_FUNC(YUV_PC_TO_RGB_TV_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114)
 DEFINE_YUV2RGB_FUNC(YUV_TV_TO_RGB_TV_709, RGB_LVL_PC, YUV_LVL_TV, 0.2126, 0.7152, 0.0722)
 DEFINE_YUV2RGB_FUNC(YUV_PC_TO_RGB_TV_709, RGB_LVL_PC, YUV_LVL_PC, 0.2126, 0.7152, 0.0722)
 
@@ -878,12 +850,12 @@ DEFINE_PREMUL_ARGB2AYUV_FUNC(PREMUL_ARGB_TV_TO_AYUV_PC_601, RGB_LVL_PC, YUV_LVL_
 DEFINE_PREMUL_ARGB2AYUV_FUNC(PREMUL_ARGB_TV_TO_AYUV_TV_709, RGB_LVL_PC, YUV_LVL_TV, 0.2126, 0.7152, 0.0722, POS_YUV)
 DEFINE_PREMUL_ARGB2AYUV_FUNC(PREMUL_ARGB_TV_TO_AYUV_PC_709, RGB_LVL_PC, YUV_LVL_PC, 0.2126, 0.7152, 0.0722, POS_YUV)
 
-DEFINE_RGB2Y_FUNC(RGB_PC_TO_Y_TV_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114 )
-DEFINE_RGB2Y_FUNC(RGB_PC_TO_Y_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114 )
+DEFINE_RGB2Y_FUNC(RGB_PC_TO_Y_TV_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114)
+DEFINE_RGB2Y_FUNC(RGB_PC_TO_Y_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114)
 DEFINE_RGB2Y_FUNC(RGB_PC_TO_Y_TV_709, RGB_LVL_PC, YUV_LVL_TV, 0.2126, 0.7152, 0.0722)
 DEFINE_RGB2Y_FUNC(RGB_PC_TO_Y_PC_709, RGB_LVL_PC, YUV_LVL_PC, 0.2126, 0.7152, 0.0722)
 
-DEFINE_RGB2Y_FUNC(RGB_TV_TO_Y_TV_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114 )
-DEFINE_RGB2Y_FUNC(RGB_TV_TO_Y_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114 )
+DEFINE_RGB2Y_FUNC(RGB_TV_TO_Y_TV_601, RGB_LVL_PC, YUV_LVL_TV, 0.299 , 0.587 , 0.114)
+DEFINE_RGB2Y_FUNC(RGB_TV_TO_Y_PC_601, RGB_LVL_PC, YUV_LVL_PC, 0.299 , 0.587 , 0.114)
 DEFINE_RGB2Y_FUNC(RGB_TV_TO_Y_TV_709, RGB_LVL_PC, YUV_LVL_TV, 0.2126, 0.7152, 0.0722)
 DEFINE_RGB2Y_FUNC(RGB_TV_TO_Y_PC_709, RGB_LVL_PC, YUV_LVL_PC, 0.2126, 0.7152, 0.0722)

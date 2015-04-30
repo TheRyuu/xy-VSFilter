@@ -24,7 +24,7 @@
 #include "../DSUtil/GolombBuffer.h"
 
 #if ENABLE_XY_LOG_DVB
-#define TRACE_DVB(_x_)		{CString tmp;tmp.Format _x_; XY_LOG_TRACE( tmp.GetString() );}
+#define TRACE_DVB(_x_)      {CString tmp;tmp.Format _x_; XY_LOG_TRACE( tmp.GetString() );}
 #else
 #define TRACE_DVB __noop
 #endif
@@ -241,8 +241,8 @@ HRESULT CDVBSub::ParseSample(IMediaSample* pSample)
                 switch (nCurSegment) {
                     case PAGE: {
                         if (m_pCurrentPage != NULL) {
-                            TRACE_DVB((_T("DVB - Force End display"))); 
-                            EnqueuePage(m_rtStart); 
+                            TRACE_DVB((_T("DVB - Force End display")));
+                            EnqueuePage(m_rtStart);
                         }
                         UpdateTimeStamp(m_rtStart);
 
@@ -352,12 +352,11 @@ void CDVBSub::Render(SubPicDesc& spd, REFERENCE_TIME rt, RECT& bbox)
                         pObject->m_height = pRegion->height;
 
                         CompositionObject::ColorType color_type = m_colorTypeSetting;
-                        if (color_type==CompositionObject::NONE)
-                        {
+                        if (color_type == CompositionObject::NONE) {
                             color_type = m_Display.width > 720 ? CompositionObject::YUV_Rec709 : CompositionObject::YUV_Rec601;
                         }
-                        pObject->SetPalette(pCLUT->size, pCLUT->palette, color_type, 
-                            m_yuvRangeSetting==CompositionObject::RANGE_NONE ? CompositionObject::RANGE_TV : m_yuvRangeSetting);
+                        pObject->SetPalette(pCLUT->size, pCLUT->palette, color_type,
+                                            m_yuvRangeSetting == CompositionObject::RANGE_NONE ? CompositionObject::RANGE_TV : m_yuvRangeSetting);
                         pObject->InitColor(spd);
                         pObject->RenderDvb(spd, nX, nY, &bbox);
                         TRACE_DVB((_T(" --> %d/%d - %d/%d\n"), i + 1, pPage->regionCount, j + 1, pRegion->objectCount));
@@ -397,16 +396,14 @@ POSITION CDVBSub::GetStartPosition(REFERENCE_TIME rt, double fps /* = 0 */)
         }
     }
 
-    POSITION	pos = m_Pages.GetHeadPosition();
+    POSITION    pos = m_Pages.GetHeadPosition();
 
     while (pos) {
-        DVB_PAGE*	pPage = m_Pages.GetAt (pos);
+        DVB_PAGE*   pPage = m_Pages.GetAt(pos);
 
         if (rt >= pPage->rtStart && rt < pPage->rtStop) {
             break;
-        }
-        else if( rt < pPage->rtStart )
-        {
+        } else if (rt < pPage->rtStart) {
             pos = NULL;
             break;
         }
@@ -447,7 +444,7 @@ void CDVBSub::Reset()
     }
 }
 
-HRESULT CDVBSub::SetYuvType( ColorType colorType, YuvRangeType yuvRangeType )
+HRESULT CDVBSub::SetYuvType(ColorType colorType, YuvRangeType yuvRangeType)
 {
     m_colorTypeSetting = colorType;
     m_yuvRangeSetting = yuvRangeType;
@@ -665,7 +662,7 @@ HRESULT CDVBSub::UpdateTimeStamp(REFERENCE_TIME rtStop)
         DVB_PAGE* pPage = m_Pages.GetPrev(pos);
         if (pPage->rtStop > rtStop) {
             TRACE_DVB((_T("DVB - Updated end of display %s - %s --> %s - %s\n"), ReftimeToString(pPage->rtStart), ReftimeToString(pPage->rtStop),
-                ReftimeToString(pPage->rtStart), ReftimeToString(rtStop)));
+                       ReftimeToString(pPage->rtStart), ReftimeToString(rtStop)));
             pPage->rtStop = rtStop;
             hr = S_OK;
         } else {

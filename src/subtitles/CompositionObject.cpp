@@ -46,10 +46,9 @@ void CompositionObject::SetPalette(int nNbEntry, HDMV_PALETTE* pPalette, ColorTy
 
     m_colorType = -1;
 
-    m_Palette.SetCount(nNbEntry>0?nNbEntry:0);
-    if(nNbEntry>0)
-    {
-        memcpy(m_Palette.GetData(), pPalette, nNbEntry*sizeof(pPalette[0]));
+    m_Palette.SetCount(nNbEntry > 0 ? nNbEntry : 0);
+    if (nNbEntry > 0) {
+        memcpy(m_Palette.GetData(), pPalette, nNbEntry * sizeof(pPalette[0]));
     }
 }
 
@@ -60,77 +59,62 @@ void CompositionObject::InitColor(const SubPicDesc& spd)
 #define FULL_TYPE(x,y) (((x)<<8)|y)
 
     int paletteNumber = m_Palette.GetCount();
-    if (m_colorType!=spd.type)
-    {
+    if (m_colorType != spd.type) {
         m_colorType = -1;
         ColorConvTable::YuvMatrixType cur_type = ColorConvTable::BT709;
         ColorConvTable::YuvRangeType cur_range = ColorConvTable::RANGE_TV;
-        if (m_OriginalColorType==YUV_Rec601)
-        {
+        if (m_OriginalColorType == YUV_Rec601) {
             cur_type = ColorConvTable::BT601;
-        }
-        else if (m_OriginalColorType==YUV_Rec709)
-        {
+        } else if (m_OriginalColorType == YUV_Rec709) {
             cur_type = ColorConvTable::BT709;
-        }
-        else
-        {
-            XY_LOG_ERROR("Not supported. "<<XY_LOG_VAR_2_STR(m_OriginalColorType));
+        } else {
+            XY_LOG_ERROR("Not supported. " << XY_LOG_VAR_2_STR(m_OriginalColorType));
             ASSERT(0);
             return;
         }
-        if (m_OriginalYuvRangeType==RANGE_TV)
-        {
+        if (m_OriginalYuvRangeType == RANGE_TV) {
             cur_range = ColorConvTable::RANGE_TV;
-        }
-        else if (m_OriginalYuvRangeType==RANGE_PC)
-        {
+        } else if (m_OriginalYuvRangeType == RANGE_PC) {
             cur_range = ColorConvTable::RANGE_PC;
-        }
-        else
-        {
-            XY_LOG_ERROR("Not supported. "<<XY_LOG_VAR_2_STR(m_OriginalYuvRangeType));
+        } else {
+            XY_LOG_ERROR("Not supported. " << XY_LOG_VAR_2_STR(m_OriginalYuvRangeType));
             ASSERT(0);
             return;
         }
 
         m_colorType = spd.type;
-        switch(spd.type)
-        {
-        case MSP_AYUV_PLANAR:
-        case MSP_AYUV:
-            for (int i=0;i<paletteNumber;i++)
-            {
-                m_Colors[m_Palette[i].entry_id] = ColorConvTable::A8Y8U8V8_TO_CUR_AYUV(
-                    m_Palette[i].T, 
-                    m_Palette[i].Y, m_Palette[i].Cb, m_Palette[i].Cr,
-                    cur_range, cur_type);
-            }
-            break;
-        case MSP_XY_AUYV:
-            for (int i=0;i<paletteNumber;i++)
-            {
-                m_Colors[m_Palette[i].entry_id] = AYUV_2_AUYV(
-                    ColorConvTable::A8Y8U8V8_TO_CUR_AYUV(
-                        m_Palette[i].T, 
-                        m_Palette[i].Y, m_Palette[i].Cb, m_Palette[i].Cr,
-                        cur_range, cur_type));
-            }
-            break;
-        case MSP_RGBA:
-            for (int i=0;i<paletteNumber;i++)
-            {
-                DWORD argb = ColorConvTable::A8Y8U8V8_TO_ARGB(
-                    m_Palette[i].T, 
-                    m_Palette[i].Y, m_Palette[i].Cb, m_Palette[i].Cr,
-                    cur_range, cur_type, m_output_tv_range_rgb);
-                m_Colors[m_Palette[i].entry_id] = argb;
-            }
-            break;
-        default:
-            XY_LOG_ERROR("Not supported. "<<XY_LOG_VAR_2_STR(spd.type));
-            ASSERT(0);
-            return;
+        switch (spd.type) {
+            case MSP_AYUV_PLANAR:
+            case MSP_AYUV:
+                for (int i = 0; i < paletteNumber; i++) {
+                    m_Colors[m_Palette[i].entry_id] = ColorConvTable::A8Y8U8V8_TO_CUR_AYUV(
+                                                          m_Palette[i].T,
+                                                          m_Palette[i].Y, m_Palette[i].Cb, m_Palette[i].Cr,
+                                                          cur_range, cur_type);
+                }
+                break;
+            case MSP_XY_AUYV:
+                for (int i = 0; i < paletteNumber; i++) {
+                    m_Colors[m_Palette[i].entry_id] = AYUV_2_AUYV(
+                                                          ColorConvTable::A8Y8U8V8_TO_CUR_AYUV(
+                                                              m_Palette[i].T,
+                                                              m_Palette[i].Y, m_Palette[i].Cb, m_Palette[i].Cr,
+                                                              cur_range, cur_type));
+                }
+                break;
+            case MSP_RGBA:
+                for (int i = 0; i < paletteNumber; i++) {
+                    DWORD argb = ColorConvTable::A8Y8U8V8_TO_ARGB(
+                                     m_Palette[i].T,
+                                     m_Palette[i].Y, m_Palette[i].Cb, m_Palette[i].Cr,
+                                     cur_range, cur_type, m_output_tv_range_rgb);
+                    m_Colors[m_Palette[i].entry_id] = argb;
+                }
+                break;
+            default:
+                XY_LOG_ERROR("Not supported. " << XY_LOG_VAR_2_STR(spd.type));
+                ASSERT(0);
+                return;
         }
     }
 }
@@ -210,7 +194,7 @@ void CompositionObject::RenderHdmv(SubPicDesc& spd)
 }
 
 
-void CompositionObject::RenderDvb(SubPicDesc& spd, short nX, short nY, RECT *dirtyRect /*= NULL*/)
+void CompositionObject::RenderDvb(SubPicDesc& spd, short nX, short nY, RECT* dirtyRect /*= NULL*/)
 {
     if (!m_pRLEData) {
         return;
@@ -228,7 +212,7 @@ void CompositionObject::RenderDvb(SubPicDesc& spd, short nX, short nY, RECT *dir
 }
 
 
-void CompositionObject::DvbRenderField(SubPicDesc& spd, CGolombBuffer& gb, short nXStart, short nYStart, short nLength, RECT *dirtyRect /*= NULL*/)
+void CompositionObject::DvbRenderField(SubPicDesc& spd, CGolombBuffer& gb, short nXStart, short nYStart, short nLength, RECT* dirtyRect /*= NULL*/)
 {
     //FillSolidRect(spd, nXStart, nYStart, m_width, m_height, 0xFFFF0000);  // Red opaque
     //FillSolidRect(spd, nXStart, nYStart, m_width, m_height, 0xCC00FF00);  // Green 80%
@@ -270,7 +254,7 @@ void CompositionObject::DvbRenderField(SubPicDesc& spd, CGolombBuffer& gb, short
 }
 
 
-void CompositionObject::Dvb2PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT *dirtyRect /*= NULL*/)
+void CompositionObject::Dvb2PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT* dirtyRect /*= NULL*/)
 {
     BYTE  bTemp;
     BYTE  nPaletteIndex = 0;
@@ -319,9 +303,8 @@ void CompositionObject::Dvb2PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb,
 
         if (nCount > 0) {
             FillSolidRect(spd, nX, nY, nCount, 1, m_Colors[nPaletteIndex]);
-            if (dirtyRect)
-            {
-                CRect tmp(nX,nY,nX+nCount,nY+1);
+            if (dirtyRect) {
+                CRect tmp(nX, nY, nX + nCount, nY + 1);
                 ::UnionRect(dirtyRect, dirtyRect, &tmp);
             }
             nX += nCount;
@@ -331,7 +314,7 @@ void CompositionObject::Dvb2PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb,
     gb.BitByteAlign();
 }
 
-void CompositionObject::Dvb4PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT *dirtyRect /*= NULL*/)
+void CompositionObject::Dvb4PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT* dirtyRect /*= NULL*/)
 {
     BYTE  bTemp;
     BYTE  nPaletteIndex = 0;
@@ -387,9 +370,8 @@ void CompositionObject::Dvb4PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb,
 
         if (nCount > 0) {
             FillSolidRect(spd, nX, nY, nCount, 1, m_Colors[nPaletteIndex]);
-            if (dirtyRect)
-            {
-                CRect tmp(nX,nY,nX+nCount,nY+1);
+            if (dirtyRect) {
+                CRect tmp(nX, nY, nX + nCount, nY + 1);
                 ::UnionRect(dirtyRect, dirtyRect, &tmp);
             }
             nX += nCount;
@@ -399,7 +381,7 @@ void CompositionObject::Dvb4PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb,
     gb.BitByteAlign();
 }
 
-void CompositionObject::Dvb8PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT *dirtyRect /*= NULL*/)
+void CompositionObject::Dvb8PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb, short& nX, short& nY, RECT* dirtyRect /*= NULL*/)
 {
     BYTE  bTemp;
     BYTE  nPaletteIndex = 0;
@@ -432,9 +414,8 @@ void CompositionObject::Dvb8PixelsCodeString(SubPicDesc& spd, CGolombBuffer& gb,
 
         if (nCount > 0) {
             FillSolidRect(spd, nX, nY, nCount, 1, m_Colors[nPaletteIndex]);
-            if (dirtyRect)
-            {
-                CRect tmp(nX,nY,nX+nCount,nY+1);
+            if (dirtyRect) {
+                CRect tmp(nX, nY, nX + nCount, nY + 1);
                 ::UnionRect(dirtyRect, dirtyRect, &tmp);
             }
             nX += nCount;

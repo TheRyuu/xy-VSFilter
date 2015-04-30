@@ -22,7 +22,7 @@
 #  define XY_LOG_ERROR(msg)     LOG4CPLUS_ERROR(xy_logger::g_logger, __FUNCTION__<<"\t:"<<msg)
 #  define XY_LOG_FATAL(msg)     LOG4CPLUS_FATAL(xy_logger::g_logger, __FUNCTION__<<"\t:"<<msg)
 
-  extern int g_log_once_id;
+extern int g_log_once_id;
 
 #  define CHECK_N_LOG(hr, msg) if(FAILED(hr)) XY_LOG_ERROR(msg)
 
@@ -92,19 +92,19 @@ CString XyUuidToString(const UUID& in_uuid);
 namespace xy_logger
 {
 #if ENABLE_XY_LOG
-  extern log4cplus::Logger g_logger;
+    extern log4cplus::Logger g_logger;
 #endif
 
-bool doConfigure(log4cplus::tistream& property_stream);
-bool doConfigure(const log4cplus::tstring& configFilename);
+    bool doConfigure(log4cplus::tistream& property_stream);
+    bool doConfigure(const log4cplus::tstring& configFilename);
 
-void write_file(const char * filename, const void * buff, int size);
+    void write_file(const char* filename, const void* buff, int size);
 
-void DumpPackBitmap2File(POINT pos, SIZE size, LPCVOID pixels, int pitch, const char *filename);
+    void DumpPackBitmap2File(POINT pos, SIZE size, LPCVOID pixels, int pitch, const char* filename);
 
-void XyDisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn);
+    void XyDisplayType(LPTSTR label, const AM_MEDIA_TYPE* pmtIn);
 
-void XyDumpGraph(IFilterGraph *pGraph, DWORD dwLevel);
+    void XyDumpGraph(IFilterGraph* pGraph, DWORD dwLevel);
 
 } //namespace xy
 

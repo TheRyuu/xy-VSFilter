@@ -10,22 +10,22 @@ interface ISubPicProviderEx2;
 class XySubRenderProviderWrapper: public CUnknown, public IXySubRenderProvider
 {
 public:
-    XySubRenderProviderWrapper( ISubPicProviderEx *provider, HRESULT* phr/*=NULL*/ );
+    XySubRenderProviderWrapper(ISubPicProviderEx* provider, HRESULT* phr/*=NULL*/);
     virtual ~XySubRenderProviderWrapper() {}
 
     DECLARE_IUNKNOWN;
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void** ppv);
 
     // IXySubRenderProvider
-    STDMETHODIMP Connect( IXyOptions *consumer );
-    STDMETHODIMP RequestFrame(IXySubRenderFrame**subRenderFrame, REFERENCE_TIME now);
+    STDMETHODIMP Connect(IXyOptions* consumer);
+    STDMETHODIMP RequestFrame(IXySubRenderFrame** subRenderFrame, REFERENCE_TIME now);
     STDMETHODIMP Invalidate(REFERENCE_TIME rtInvalidate = -1);
 
 private:
-    HRESULT Render( REFERENCE_TIME now, POSITION pos, double fps );
+    HRESULT Render(REFERENCE_TIME now, POSITION pos, double fps);
     HRESULT ResetAllocator();
 private:
-    IXyOptions *m_consumer;
+    IXyOptions* m_consumer;
     CComPtr<ISubPicProviderEx> m_provider;
     CComPtr<ISubPicExAllocator> m_allocator;
     CComPtr<ISubPicEx> m_pSubPic;
@@ -37,22 +37,22 @@ private:
 class XySubRenderProviderWrapper2: public CUnknown, public IXySubRenderProvider
 {
 public:
-    XySubRenderProviderWrapper2( ISubPicProviderEx2 *provider, HRESULT* phr/*=NULL*/ );
+    XySubRenderProviderWrapper2(ISubPicProviderEx2* provider, HRESULT* phr/*=NULL*/);
     virtual ~XySubRenderProviderWrapper2() {}
 
     DECLARE_IUNKNOWN;
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, void** ppv);
 
     // IXySubRenderProvider
-    STDMETHODIMP Connect(IXyOptions *consumer);
-    STDMETHODIMP RequestFrame(IXySubRenderFrame**subRenderFrame, REFERENCE_TIME now);
+    STDMETHODIMP Connect(IXyOptions* consumer);
+    STDMETHODIMP RequestFrame(IXySubRenderFrame** subRenderFrame, REFERENCE_TIME now);
     STDMETHODIMP Invalidate(REFERENCE_TIME rtInvalidate = -1);
 
 private:
-    HRESULT Render( REFERENCE_TIME now, POSITION pos );
+    HRESULT Render(REFERENCE_TIME now, POSITION pos);
     HRESULT CombineBitmap(REFERENCE_TIME now);
 private:
-    IXyOptions *m_consumer;
+    IXyOptions* m_consumer;
     CComPtr<ISubPicProviderEx2> m_provider;
     CComPtr<IXySubRenderFrame> m_xy_sub_render_frame;
     REFERENCE_TIME m_start, m_stop;

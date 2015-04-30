@@ -13,7 +13,7 @@ public:
 
     bool STDMETHODCALLTYPE InitPool(int capacity);
 
-    CPooledSubPicAllocator(int alpha_blt_dst_type, SIZE maxsize, int capacity, int type=-1 );
+    CPooledSubPicAllocator(int alpha_blt_dst_type, SIZE maxsize, int capacity, int type = -1);
     virtual ~CPooledSubPicAllocator();
 private:
     CCritSec _poolLock;
@@ -37,9 +37,9 @@ class CPooledSubPic : public CMemSubPic
 {
     friend class CPooledSubPicAllocator;
 public:
-    CPooledSubPic(SubPicDesc& spd, int alpha_blt_dst_type, CPooledSubPicAllocator* pool):CMemSubPic(spd, alpha_blt_dst_type),_pool(pool){}
+    CPooledSubPic(SubPicDesc& spd, int alpha_blt_dst_type, CPooledSubPicAllocator* pool): CMemSubPic(spd, alpha_blt_dst_type), _pool(pool) {}
     virtual ~CPooledSubPic();
-    
+
 private:
     CCritSec _csLock;
     CPooledSubPicAllocator* _pool;

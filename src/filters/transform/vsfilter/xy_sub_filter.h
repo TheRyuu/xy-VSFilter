@@ -9,8 +9,8 @@ class CDirectVobSubFilter;
 
 // Expose this interface if you do NOT want to work with XySubFilter in a graph
 [uuid("8871ac83-89c8-44e9-913f-a9a2a322440a")]
-interface IXySubFilterGraphMutex : public IUnknown
-{
+interface IXySubFilterGraphMutex :
+public IUnknown {
 
 };
 
@@ -47,11 +47,11 @@ public:
 
     // XyOptionsImpl
     virtual HRESULT OnOptionChanged(unsigned field);
-    virtual HRESULT DoGetField(unsigned field, void *value);
+    virtual HRESULT DoGetField(unsigned field, void* value);
 
     // IXyOptions
-    STDMETHODIMP XyGetString   (unsigned field, LPWSTR   *value, int *chars);
-    STDMETHODIMP XySetBool     (unsigned field, bool      value);
+    STDMETHODIMP XyGetString(unsigned field, LPWSTR*   value, int* chars);
+    STDMETHODIMP XySetBool(unsigned field, bool      value);
 
     // DirectVobSubImpl
     HRESULT GetCurStyles(SubStyle sub_style[], int count);
@@ -71,8 +71,8 @@ public:
     STDMETHODIMP GetPages(CAUUID* pPages);
 
     // IAMStreamSelect
-    STDMETHODIMP Count(DWORD* pcStreams); 
-    STDMETHODIMP Enable(long lIndex, DWORD dwFlags); 
+    STDMETHODIMP Count(DWORD* pcStreams);
+    STDMETHODIMP Enable(long lIndex, DWORD dwFlags);
     STDMETHODIMP Info(long lIndex, AM_MEDIA_TYPE** ppmt, DWORD* pdwFlags, LCID* plcid, DWORD* pdwGroup, WCHAR** ppszName, IUnknown** ppObject, IUnknown** ppUnk);
 
     //ISubRenderProvider
@@ -87,7 +87,7 @@ private:
     void SetSubtitle(ISubStream* pSubStream, bool fApplyDefStyle = true);
     void InvalidateSubtitle(REFERENCE_TIME rtInvalidate = -1, DWORD_PTR nSubtitleId = -1);
 
-    HRESULT UpdateParamFromConsumer(bool getNameAndVersion=false);
+    HRESULT UpdateParamFromConsumer(bool getNameAndVersion = false);
 
     int FindPreferedLanguage(bool fHideToo = true);
     void UpdatePreferedLanguages(CString l);
@@ -97,7 +97,7 @@ private:
     void RemoveSubStream(ISubStream* pSubStream);
     HRESULT CheckInputType(const CMediaType* pmt);
 
-    HRESULT GetIsEmbeddedSubStream(int iSelected, bool *fIsEmbedded);
+    HRESULT GetIsEmbeddedSubStream(int iSelected, bool* fIsEmbedded);
 
     bool LoadExternalSubtitle(IFilterGraph* pGraph);
 
@@ -125,7 +125,7 @@ private:
     ColorConvTable::YuvMatrixType m_video_yuv_matrix_decided_by_sub;
     ColorConvTable::YuvRangeType m_video_yuv_range_decided_by_sub;
 
-    ISubStream *m_curSubStream;
+    ISubStream* m_curSubStream;
     CInterfaceList<ISubStream> m_pSubStreams;
     CAtlList<bool> m_fIsSubStreamEmbeded;
 
@@ -133,8 +133,8 @@ private:
     CCritSec m_csFilter;
 
     CCritSec m_csProviderFields;// critical section protecting fields to be read by consumer
-                                // it is needed because otherwise consumer has to hold m_csSubLock which may be holded 
-                                // by renderring thread for a long time
+    // it is needed because otherwise consumer has to hold m_csSubLock which may be holded
+    // by renderring thread for a long time
 
     CCritSec m_csConsumer;      // critical section protecting m_consumer
 

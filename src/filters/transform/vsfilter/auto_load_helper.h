@@ -5,14 +5,14 @@ class XyAutoLoaderDummyInputPin: public CBaseInputPin
 {
 public:
     XyAutoLoaderDummyInputPin(
-        XySubFilterAutoLoader *pFilter,
-        CCritSec *pLock,
-        HRESULT *phr,
+        XySubFilterAutoLoader* pFilter,
+        CCritSec* pLock,
+        HRESULT* phr,
         LPCWSTR pName);
 
-    HRESULT CheckMediaType(const CMediaType *);
+    HRESULT CheckMediaType(const CMediaType*);
 private:
-    XySubFilterAutoLoader *m_filter;
+    XySubFilterAutoLoader* m_filter;
 };
 
 [uuid("6b237877-902b-4c6c-92f6-e63169a5166c")]
@@ -32,12 +32,12 @@ public:
     STDMETHODIMP QueryFilterInfo(FILTER_INFO* pInfo);
 
     bool ShouldWeAutoLoad(IFilterGraph* pGraph);
-    HRESULT CheckInput(const CMediaType * mt);
+    HRESULT CheckInput(const CMediaType* mt);
 public:
-    static HRESULT GetMerit( const GUID& clsid, DWORD *merit );
+    static HRESULT GetMerit(const GUID& clsid, DWORD* merit);
 protected:
     CCritSec m_pLock;
-    XyAutoLoaderDummyInputPin * m_pin;
+    XyAutoLoaderDummyInputPin* m_pin;
 
     int                 m_load_level;
     bool                m_load_external;
