@@ -28,6 +28,7 @@
 #include <initguid.h>
 #include "..\..\..\..\include\moreuuids.h"
 #include "xy_logger.h"
+#include "..\..\..\subtitles\xy_malloc.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CVSFilterApp
@@ -50,7 +51,10 @@ extern "C" BOOL WINAPI DllEntryPoint(HINSTANCE, ULONG, LPVOID);
 
 BOOL CVSFilterApp::InitInstance()
 {
+    xy_generic_allocator.init();
+
     if (!CWinApp::InitInstance()) {
+        xy_generic_allocator.shutdown();
         return FALSE;
     }
 
@@ -71,6 +75,7 @@ BOOL CVSFilterApp::InitInstance()
 int CVSFilterApp::ExitInstance()
 {
     DllEntryPoint(AfxGetInstanceHandle(), DLL_PROCESS_DETACH, 0); // "DllMain" of the dshow baseclasses
+    xy_generic_allocator.shutdown();
 
     return CWinApp::ExitInstance();
 }
